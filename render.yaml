@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: fleetops
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SERP_API_KEY
+        sync: false
+      - key: TOKENIZERS_PARALLELISM
+        value: false
+      - key: PYTHONPATH
+        value: /opt/render/project/src
+    healthCheckPath: /
+    plan: starter
+    region: oregon
+    scaling:
+      minInstances: 1
+      maxInstances: 1
+    disk:
+      name: fleetops-disk
+      mountPath: /opt/render/project/src/app/index_storage
+      sizeGB: 1

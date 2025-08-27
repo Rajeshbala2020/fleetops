@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Operations Assistant</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+
+<div class="chat-outer-wrapper">
+<div class="chat-center">
+    {% for chat in chat_history %}
+           {% if chat.sender == 'user' %}
+               <div class="chat-bubble user-bubble">{{ chat.message|safe }}</div>
+           {% elif chat.sender == 'bot' %}
+               <div class="chat-bubble bot-bubble">{{ chat.message|safe }}</div>
+           {% endif %}
+       {% endfor %}
+</div>
+    <div class="input-fixed-wrapper">
+<form id="chat-form" class="input-form">
+            <textarea id="question" name="question" placeholder="Type your message..." style="resize: none;"></textarea>
+    <button type="submit" id="submit-btn" class="submit-btn">→</button>
+</form>
+    </div>
+</div>
+
+<script src="/static/js/function.js" defer></script>
+</body>
+</html>

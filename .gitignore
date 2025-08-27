@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+*.log
+*.env
+myenv/
+.idea/
+
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.env.*
+*.sqlite3
+.DS_Store
+
+# Virtual envs
+venv/
+.venv/
+env/
+fleetops_env/
+
+# Models / checkpoints / data (adjust as needed)
+models/
+checkpoints/
+data/

@@ -5,12 +5,12 @@ services:
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    startCommand: uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000}
     envVars:
       - key: OPENAI_API_KEY
-        sync: false
+        value: placeholder_key_set_in_dashboard
       - key: SERP_API_KEY
-        sync: false
+        value: placeholder_key_set_in_dashboard
       - key: TOKENIZERS_PARALLELISM
         value: false
       - key: PYTHONPATH
@@ -19,6 +19,8 @@ services:
         value: 1
       - key: PIP_NO_CACHE_DIR
         value: 1
+      - key: PORT
+        value: 10000
     healthCheckPath: /
     plan: starter
     region: oregon

@@ -1,8 +1,5 @@
 # app/routes/chatbot_routes.py
-import os
 from fastapi import Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 from fastapi.routing import APIRouter
 from starlette.responses import JSONResponse, PlainTextResponse, StreamingResponse
 from slowapi.errors import RateLimitExceeded
@@ -12,11 +9,6 @@ from pydantic import ValidationError
 from app.services.schemas import ChatRequest
 
 chatbot_bp = APIRouter()
-
-
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-templates_dir = os.path.join(project_root, "app","templates")
-templates = Jinja2Templates(directory=templates_dir)
 
 
 def _rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
@@ -50,12 +42,7 @@ def init_chatbot_routes(app, chatbot_service, db_service, web_search_service):
     
     chatbot_service.set_function("research_wrapper", research_wrapper)
 
-    @chatbot_bp.get("/", response_class=HTMLResponse)
-    async def home(request: Request):
-        return templates.TemplateResponse("index.html",
-                                          {"request": request, "chat_history": chatbot_service.chat_history})
-
-    @chatbot_bp.post('/get-bot-response', response_class=StreamingResponse)
+    @chatbot_bp.post('/api/fleetAssistant', response_class=StreamingResponse)
     @limiter.limit("5/minute")
     async def get_bot_response(request: Request):
         try:
@@ -87,6 +74,11 @@ def init_chatbot_routes(app, chatbot_service, db_service, web_search_service):
             logger.exception("Unexpected error:")
             return JSONResponse(content={"error": "An unexpected error occurred. Please try again later."},
                                 status_code=500)
+
+    # Health check endpoint for Render
+    @app.get("/")
+    async def health_check():
+        return {"status": "healthy", "message": "FleetOps API is running"}
 
     app.include_router(chatbot_bp)
     app.state.limiter = limiter
